@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
+import { generateEnergyQuote } from "./lib/quoteLogic"; // 直接引入函式
 
 type QuoteData = {
   quote: string;
@@ -14,34 +15,27 @@ type QuoteData = {
 export default function Home() {
   const [data, setData] = useState<QuoteData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showQuote, setShowQuote] = useState(false);
 
-  const getQuote = async () => {
+  const getQuote = () => {
     setLoading(true);
-    setError(null);
     setShowQuote(false);
-    try {
-      const response = await fetch("/api/energy-quote?city=taipei");
-      if (!response.ok) {
-        throw new Error("無法取得小語");
+    
+    // 模擬一個短暫的讀取延遲，讓使用者有回饋感
+    setTimeout(() => {
+      try {
+        // 直接呼叫函式，不再使用 fetch
+        const result = generateEnergyQuote("taipei");
+        setData(result);
+        // 觸發淡入動畫
+        setTimeout(() => setShowQuote(true), 100);
+      } finally {
+        setLoading(false);
       }
-      const result: QuoteData = await response.json();
-      setData(result);
-      // Trigger fade-in animation
-      setTimeout(() => setShowQuote(true), 100);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("發生未知錯誤");
-      }
-    } finally {
-      setLoading(false);
-    }
+    }, 300); // 300ms 延遲
   };
 
-  // Fetch initial quote on component mount
+  // 元件掛載時取得初始小語
   useEffect(() => {
     getQuote();
   }, []);
@@ -68,13 +62,12 @@ export default function Home() {
         </header>
 
         <div className={styles.quoteDisplay}>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {!error && !loading && data && (
+          {!loading && data && (
             <p className={`${styles.quoteText} ${showQuote ? styles.visible : ''}`}>
               {data.quote}
             </p>
           )}
-          {!error && !loading && !data && (
+          {!loading && !data && (
             <p>點擊按鈕來索取你的今日小語。</p>
           )}
           {loading && <p>正在為你生成小語...</p>}
