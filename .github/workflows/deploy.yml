@@ -20,4 +20,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public # This is the folder containing your static HTML, CSS, JS
+          publish_dir: . # This is the folder containing your static HTML, CSS, JS
