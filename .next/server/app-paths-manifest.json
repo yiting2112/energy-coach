@@ -1,0 +1,4 @@
+{
+  "/api/energy-quote/route": "app/api/energy-quote/route.js",
+  "/page": "app/page.js"
+}
