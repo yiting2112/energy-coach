@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  output: 'export',
+  basePath: '/energy-coach',
+  assetPrefix: '/energy-coach/',
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
